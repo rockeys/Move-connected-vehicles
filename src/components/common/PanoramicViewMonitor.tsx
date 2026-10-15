@@ -316,8 +316,8 @@ export const PanoramicViewMonitor: React.FC<PanoramicViewMonitorProps> = ({ vehi
               <div className="relative w-full h-full flex flex-col items-center justify-center p-6 text-center">
                 <img
                   src={vehicle.model.toLowerCase().includes('defender') 
-                    ? '/src/assets/images/jlr_defender_telematics_1790688221801.jpg' 
-                    : '/src/assets/images/jlr_range_rover_hero_1790688206035.jpg'}
+                    ? 'public/images/jlr_defender_telematics_1790688221801.jpg' 
+                    : 'public/images/jlr_range_rover_hero_1790688206035.jpg'}
                   alt="3D Panoramic Vehicle Orbit"
                   className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"
                 />

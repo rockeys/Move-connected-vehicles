@@ -79,8 +79,8 @@ export const VehicleCockpit360: React.FC = () => {
 
   const isDefender = selectedVehicle.model.toLowerCase().includes('defender');
   const heroImageSrc = isDefender
-    ? '/src/assets/images/jlr_defender_telematics_1790688221801.jpg'
-    : '/src/assets/images/jlr_range_rover_hero_1790688206035.jpg';
+    ? 'public/images/jlr_defender_telematics_1790688221801.jpg'
+    : 'public/images/jlr_range_rover_hero_1790688206035.jpg';
 
   const handleRemoteDiagnosticScan = () => {
     setSimulatingCommand(true);
@@ -689,7 +689,7 @@ export const VehicleCockpit360: React.FC = () => {
             <div className="flex items-start justify-between pb-3 border-b border-[#224375]">
               <div className="flex items-center gap-3">
                 <img
-                  src="/src/assets/images/tata_move_sim_iot_1790688234187.jpg"
+                  src="public/images/tata_move_sim_iot_1790688234187.jpg"
                   alt="Tata Move SIM Microchip"
                   referrerPolicy="no-referrer"
                   className="h-12 w-12 rounded-lg border border-sky-500/40 object-cover"
