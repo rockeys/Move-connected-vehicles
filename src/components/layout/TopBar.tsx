@@ -147,7 +147,7 @@ export const TopBar: React.FC = () => {
   // Label display for the trigger button
   const getBuDisplayText = () => {
     if (!filters.businessUnits || filters.businessUnits.length === 0 || filters.businessUnits.length === BUSINESS_UNITS.length) {
-      return '(Tout)';
+      return '(ALL)';
     }
     if (filters.businessUnits.length === 1) {
       return filters.businessUnits[0];
@@ -235,7 +235,7 @@ export const TopBar: React.FC = () => {
                 <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Rechercher..."
+                  placeholder="search..."
                   value={buSearch}
                   onChange={(e) => setBuSearch(e.target.value)}
                   className="w-full rounded-md border border-[#224375] bg-[#152744] py-1 pl-7 pr-3 text-xs text-white placeholder-slate-400 focus:border-sky-400 focus:outline-none"
@@ -254,7 +254,7 @@ export const TopBar: React.FC = () => {
                     onChange={handleToggleAll}
                     className="rounded border-[#294c7a] bg-[#152744] text-sky-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span>(Tout)</span>
+                  <span>(ALL)</span>
                 </label>
                 <span className="text-[10px] text-slate-400 font-mono">
                   {tempSelectedBUs.length}/{BUSINESS_UNITS.length}
@@ -298,7 +298,7 @@ export const TopBar: React.FC = () => {
                   onClick={handleCancelBuFilter}
                   className="rounded-lg border border-[#224375] bg-[#152744] px-2.5 py-1 text-xs text-slate-300 hover:text-white hover:bg-[#1a3156] transition-colors cursor-pointer"
                 >
-                  Annuler
+                  Cancel
                 </button>
                 <button
                   type="button"
@@ -306,7 +306,7 @@ export const TopBar: React.FC = () => {
                   className="rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold px-3 py-1 text-xs shadow-md transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <Check size={12} />
-                  Appliquer
+                  Apply
                 </button>
               </div>
             </div>
