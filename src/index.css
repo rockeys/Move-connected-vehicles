@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --color-theme-base: #0e1e36;
+    --color-theme-surface: #142745;
+    --color-theme-card: #1a3156;
+    --color-theme-border: #294c7e;
+    --color-theme-accent: #38bdf8;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #0e1e36;
+    color: #f1f5f9;
+  }
+}
+
+/* Custom crisp dark blue scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e1e36;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #254472;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #345c99;
+}
+
+/* Precision tabular numerals */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle dark blue cockpit grid pattern */
+.bg-cockpit-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+}
+
+/* Leaflet styles and OpenStreetMap Dark Mode customization */
+@import "leaflet/dist/leaflet.css";
+
+@keyframes markerBlinkGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 12px currentColor);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.82);
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+}
+
+@keyframes markerRippleWave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.95;
+  }
+  60% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.animate-marker-blink {
+  animation: markerBlinkGlow 1.4s ease-in-out infinite;
+}
+
+.animate-marker-ripple {
+  animation: markerRippleWave 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+/* Dark mode overrides for Leaflet */
+.leaflet-container {
+  background-color: #0b172a !important;
+  font-family: inherit;
+  outline: none;
+}
+
+.leaflet-bar {
+  border: 1px solid #224375 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.leaflet-bar a {
+  background-color: #152744 !important;
+  color: #38bdf8 !important;
+  border-bottom: 1px solid #224375 !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: #203c68 !important;
+  color: #ffffff !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(14, 30, 54, 0.85) !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+  border-top-left-radius: 6px;
+  padding: 2px 8px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #38bdf8 !important;
+  text-decoration: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #152744 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #224375 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7) !important;
+  padding: 4px;
+}
+
+.leaflet-popup-tip {
+  background: #152744 !important;
+}
+
+/* Custom Geographical Split Leaflet Tooltip matching screenshot */
+.leaflet-tooltip.custom-geo-tooltip {
+  background-color: #0c182a !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #294c7e !important;
+  border-radius: 8px !important;
+  padding: 9px 12px !important;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.85), 0 0 12px rgba(56, 189, 248, 0.2) !important;
+  font-family: inherit !important;
+  backdrop-filter: blur(12px) !important;
+  pointer-events: none;
+}
+
+.leaflet-tooltip-top.custom-geo-tooltip:before {
+  border-top-color: #0c182a !important;
+}
+.leaflet-tooltip-bottom.custom-geo-tooltip:before {
+  border-bottom-color: #0c182a !important;
+}
+.leaflet-tooltip-left.custom-geo-tooltip:before {
+  border-left-color: #0c182a !important;
+}
+.leaflet-tooltip-right.custom-geo-tooltip:before {
+  border-right-color: #0c182a !important;
+}
+
+
