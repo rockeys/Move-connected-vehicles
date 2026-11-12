@@ -981,9 +981,7 @@ export const CountryLevelDetails: React.FC = () => {
             </select>
             <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none" />
           </div>
-          <span className="text-[11px] font-mono text-slate-400 hidden sm:inline">
-            6 Operational Telematics Markets
-          </span>
+          
         </div>
       </div>
 

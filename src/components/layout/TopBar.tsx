@@ -371,7 +371,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* User Profile */}
         <div className="flex items-center gap-2.5 pl-2 border-l border-[#224375]">
           <img
-            src="/src/assets/images/avatar_ops_director_1790688245417.jpg"
+            src="public/images/avatar_ops_director_1790688245417.jpg"
             alt="VP Connected Vehicle"
             referrerPolicy="no-referrer"
             className="h-8.5 w-8.5 rounded-full border border-sky-400/50 object-cover"
