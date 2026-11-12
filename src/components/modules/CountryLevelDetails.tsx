@@ -947,9 +947,9 @@ export const CountryLevelDetails: React.FC = () => {
                 Live Sync
               </span>
             </div>
-            <p className="text-xs text-slate-300 mt-0.5">
+            {/* <p className="text-xs text-slate-300 mt-0.5">
               Region: <strong className="text-sky-300 font-mono">{meta.region}</strong>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
