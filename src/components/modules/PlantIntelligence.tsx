@@ -112,10 +112,7 @@ export const PlantIntelligence: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="rounded-lg border border-[#224375] bg-[#152744] px-4 py-2.5 text-center">
-              <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Readiness Score</div>
-              <div className="text-xl font-bold font-mono text-sky-400">{selectedPlant.readinessScore}%</div>
-            </div>
+            
             <div className="rounded-lg border border-[#224375] bg-[#152744] px-4 py-2.5 text-center">
               <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">SIM Activation</div>
               <div className="text-xl font-bold font-mono text-white">{selectedPlant.simActivationRate}%</div>
@@ -145,16 +142,7 @@ export const PlantIntelligence: React.FC = () => {
             <div className="text-base font-bold font-mono text-white mt-1">{totalHourlyOutput} / {targetHourlyOutput} uph</div>
             <div className="text-[10px] text-slate-300 mt-1 font-mono">Units Per Hour</div>
           </div>
-          <div className="rounded-lg border border-[#224375] bg-[#152744] p-3">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Defect Rate (PPM)</div>
-            <div className="text-base font-bold font-mono text-white mt-1">{selectedPlant.defectRatePpm} PPM</div>
-            <div className="text-[10px] text-emerald-400 mt-1 font-mono font-semibold">Industry Low</div>
-          </div>
-          <div className="rounded-lg border border-[#224375] bg-[#152744] p-3">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">TCU Incidents</div>
-            <div className="text-base font-bold font-mono text-amber-400 mt-1">{selectedPlant.connectivityIncidentsYTD}</div>
-            <div className="text-[10px] text-slate-300 mt-1 font-mono">Under Investigation</div>
-          </div>
+          
         </div>
       </div>
 

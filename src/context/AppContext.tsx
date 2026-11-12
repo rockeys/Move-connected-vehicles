@@ -31,20 +31,17 @@ interface AppContextType {
   lastTelemetryTick: Date;
   selectedPlant: Plant | null;
   setSelectedPlantId: (plantId: string) => void;
+  selectedCountry: string;
+  setSelectedCountry: (country: string) => void;
   navigateToCockpit: (vin: string) => void;
   navigateToPlant: (plantId: string) => void;
-  selectedCountryId: string;
-  setSelectedCountryId: (countryId: string) => void;
-  navigateToCountry: (countryId: string) => void;
+  navigateToCountry: (country: string) => void;
   acknowledgeIncident: (id: string) => void;
   resolveIncident: (id: string) => void;
   pingVehicle: (vin: string) => void;
   switchEsimProfile: (vin: string) => void;
   activeToast: { title: string; message: string; type?: 'info' | 'success' | 'warning' } | null;
   showToast: (title: string, message: string, type?: 'info' | 'success' | 'warning') => void;
-  sidebarCollapsed: boolean;
-  setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-  toggleSidebar: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -84,12 +81,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [incidents, setIncidents] = useState<IncidentAlert[]>(INCIDENT_ALERTS);
   const [isLiveSimulation, setIsLiveSimulation] = useState<boolean>(true);
   const [lastTelemetryTick, setLastTelemetryTick] = useState<Date>(new Date());
+  const [selectedCountry, setSelectedCountry] = useState<string>('India');
   const [activeToast, setActiveToast] = useState<{ title: string; message: string; type?: 'info' | 'success' | 'warning' } | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
-
-  const toggleSidebar = () => {
-    setSidebarCollapsed(prev => !prev);
-  };
 
   const showToast = (title: string, message: string, type: 'info' | 'success' | 'warning' = 'info') => {
     setActiveToast({ title, message, type });
@@ -119,8 +112,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return plants.find(p => p.id === filters.plantId) || null;
   }, [plants, filters.plantId]);
 
-  const [selectedCountryId, setSelectedCountryId] = useState<string>('uk');
-
   const navigateToCockpit = (vin: string) => {
     setSelectedVehicleVin(vin);
     setActiveModule('vehicle-360');
@@ -131,8 +122,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setActiveModule('plant-intelligence');
   };
 
-  const navigateToCountry = (countryId: string) => {
-    setSelectedCountryId(countryId);
+  const navigateToCountry = (country: string) => {
+    setSelectedCountry(country);
     setActiveModule('country-details');
   };
 
@@ -231,7 +222,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         const matchesIccid = v.simIccid.includes(q);
         const matchesCity = v.city.toLowerCase().includes(q);
         const matchesPlant = v.plantName.toLowerCase().includes(q);
-        if (!matchesVin && !matchesModel && !matchesIccid && !matchesCity && !matchesPlant) return false;
+        const matchesCountry = (v.country || '').toLowerCase().includes(q);
+        if (!matchesVin && !matchesModel && !matchesIccid && !matchesCity && !matchesPlant && !matchesCountry) return false;
       }
       return true;
     });
@@ -257,20 +249,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         lastTelemetryTick,
         selectedPlant,
         setSelectedPlantId,
+        selectedCountry,
+        setSelectedCountry,
         navigateToCockpit,
         navigateToPlant,
-        selectedCountryId,
-        setSelectedCountryId,
         navigateToCountry,
         acknowledgeIncident,
         resolveIncident,
         pingVehicle,
         switchEsimProfile,
         activeToast,
-        showToast,
-        sidebarCollapsed,
-        setSidebarCollapsed,
-        toggleSidebar
+        showToast
       }}
     >
       {children}

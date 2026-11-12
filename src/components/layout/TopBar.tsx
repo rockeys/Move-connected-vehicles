@@ -12,8 +12,8 @@ import {
   ChevronDown,
   X,
   Check,
-  Factory,
-  PanelLeft
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -28,18 +28,22 @@ export const BUSINESS_UNITS = [
   'JLR VDC Test Staging'
 ] as const;
 
-export const TopBar: React.FC = () => {
+interface TopBarProps {
+  sidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({ 
+  sidebarCollapsed = false, 
+  onToggleSidebar 
+}) => {
   const { 
     filters, 
     setFilter, 
     resetFilters, 
     incidents, 
     setActiveModule,
-    navigateToCockpit,
-    plants,
-    selectedPlant,
-    sidebarCollapsed,
-    toggleSidebar
+    navigateToCockpit
   } = useApp();
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -47,10 +51,6 @@ export const TopBar: React.FC = () => {
   const [buSearch, setBuSearch] = useState('');
   const [tempSelectedBUs, setTempSelectedBUs] = useState<string[]>([]);
   const buDropdownRef = useRef<HTMLDivElement>(null);
-
-  const [plantDropdownOpen, setPlantDropdownOpen] = useState(false);
-  const [plantSearch, setPlantSearch] = useState('');
-  const plantDropdownRef = useRef<HTMLDivElement>(null);
 
   const openIncidents = incidents.filter(i => i.status !== 'Resolved');
 
@@ -60,7 +60,7 @@ export const TopBar: React.FC = () => {
       if (filters.businessUnits && filters.businessUnits.length > 0) {
         setTempSelectedBUs([...filters.businessUnits]);
       } else {
-        // By default all are selected (Tout)
+        // By default all are selected (All)
         setTempSelectedBUs([...BUSINESS_UNITS]);
       }
       setBuSearch('');
@@ -68,7 +68,7 @@ export const TopBar: React.FC = () => {
     setBuDropdownOpen(!buDropdownOpen);
   };
 
-  // Close BU dropdown on click outside
+  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (buDropdownRef.current && !buDropdownRef.current.contains(event.target as Node)) {
@@ -83,22 +83,7 @@ export const TopBar: React.FC = () => {
     };
   }, [buDropdownOpen]);
 
-  // Close Plant dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (plantDropdownRef.current && !plantDropdownRef.current.contains(event.target as Node)) {
-        setPlantDropdownOpen(false);
-      }
-    };
-    if (plantDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [plantDropdownOpen]);
-
-  // Handle (Tout) toggle
+  // Handle (All) toggle
   const isAllSelected = tempSelectedBUs.length === BUSINESS_UNITS.length;
   const handleToggleAll = () => {
     if (isAllSelected) {
@@ -120,14 +105,14 @@ export const TopBar: React.FC = () => {
   // Apply button
   const handleApplyBuFilter = () => {
     if (tempSelectedBUs.length === BUSINESS_UNITS.length || tempSelectedBUs.length === 0) {
-      setFilter('businessUnits', []); // empty array denotes all / tout
+      setFilter('businessUnits', []); // empty array denotes all
     } else {
       setFilter('businessUnits', tempSelectedBUs);
     }
     setBuDropdownOpen(false);
   };
 
-  // Cancel / Annuler button
+  // Cancel button
   const handleCancelBuFilter = () => {
     setBuDropdownOpen(false);
   };
@@ -137,47 +122,35 @@ export const TopBar: React.FC = () => {
     bu.toLowerCase().includes(buSearch.toLowerCase())
   );
 
-  // Filtered plants based on search input
-  const filteredPlants = plants.filter(p => 
-    p.name.toLowerCase().includes(plantSearch.toLowerCase()) ||
-    p.country.toLowerCase().includes(plantSearch.toLowerCase()) ||
-    p.shortName.toLowerCase().includes(plantSearch.toLowerCase())
-  );
-
   // Label display for the trigger button
   const getBuDisplayText = () => {
     if (!filters.businessUnits || filters.businessUnits.length === 0 || filters.businessUnits.length === BUSINESS_UNITS.length) {
-      return '(ALL)';
+      return '(All)';
     }
     if (filters.businessUnits.length === 1) {
       return filters.businessUnits[0];
     }
-    return `${filters.businessUnits.length} sélectionnés`;
-  };
-
-  const getPlantDisplayText = () => {
-    if (!filters.plantId || filters.plantId === 'all') {
-      return '(All Plants)';
-    }
-    return selectedPlant?.shortName || selectedPlant?.name || filters.plantId;
+    return `${filters.businessUnits.length} selected`;
   };
 
   return (
-    <header className="relative z-20 flex h-16 w-full items-center justify-between border-b border-[#224375] bg-[#132542] px-6 backdrop-blur-md">
-      {/* Sidebar Toggle & Search Bar */}
-      <div className="flex items-center gap-3 flex-1 max-w-xl">
-        <button
-          type="button"
-          data-sidebar-toggle="true"
-          onClick={toggleSidebar}
-          aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          title={sidebarCollapsed ? 'Expand sidebar navigation' : 'Collapse sidebar navigation'}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#224375] bg-[#152744] text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-[#1a3156] transition-colors cursor-pointer"
-        >
-          <PanelLeft size={16} className={!sidebarCollapsed ? 'text-sky-400' : 'text-slate-300'} />
-        </button>
-        
-
+    <header className="relative z-20 flex h-16 w-full items-center justify-between border-b border-[#224375] bg-[#132542] px-4 sm:px-6 backdrop-blur-md gap-4">
+      {/* Sidebar Collapse Toggle & Search Bar */}
+      <div className="flex items-center gap-3.5 flex-1 max-w-xl">
+        {onToggleSidebar && (
+          <button
+            onClick={onToggleSidebar}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-lg border border-[#224375] bg-[#152744] text-slate-300 hover:border-sky-500/50 hover:bg-[#1a3156] hover:text-white transition-all cursor-pointer shadow-sm group"
+          >
+            {sidebarCollapsed ? (
+              <PanelLeftOpen size={17} className="text-sky-400 group-hover:scale-110 transition-transform" />
+            ) : (
+              <PanelLeftClose size={17} className="text-slate-300 group-hover:text-white group-hover:scale-110 transition-transform" />
+            )}
+          </button>
+        )}
         <div className="relative w-full">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -200,6 +173,7 @@ export const TopBar: React.FC = () => {
 
       {/* Global Context Controls */}
       <div className="flex items-center gap-3">
+
         {/* Business Unit Multi-Select Filter Dropdown */}
         <div className="relative" ref={buDropdownRef}>
           <button
@@ -235,7 +209,7 @@ export const TopBar: React.FC = () => {
                 <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="search..."
+                  placeholder="Search"
                   value={buSearch}
                   onChange={(e) => setBuSearch(e.target.value)}
                   className="w-full rounded-md border border-[#224375] bg-[#152744] py-1 pl-7 pr-3 text-xs text-white placeholder-slate-400 focus:border-sky-400 focus:outline-none"
@@ -254,7 +228,7 @@ export const TopBar: React.FC = () => {
                     onChange={handleToggleAll}
                     className="rounded border-[#294c7a] bg-[#152744] text-sky-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span>(ALL)</span>
+                  <span>(All)</span>
                 </label>
                 <span className="text-[10px] text-slate-400 font-mono">
                   {tempSelectedBUs.length}/{BUSINESS_UNITS.length}
@@ -264,7 +238,7 @@ export const TopBar: React.FC = () => {
               {/* List of Business Units */}
               <div className="max-h-52 overflow-y-auto space-y-0.5 pr-1 py-1">
                 {filteredBUs.length === 0 ? (
-                  <div className="text-[11px] text-slate-400 py-3 text-center">Aucun résultat</div>
+                  <div className="text-[11px] text-slate-400 py-3 text-center">No results found</div>
                 ) : (
                   filteredBUs.map(bu => {
                     const isChecked = tempSelectedBUs.includes(bu);
@@ -291,7 +265,7 @@ export const TopBar: React.FC = () => {
                 )}
               </div>
 
-              {/* Action buttons: Annuler & Appliquer */}
+              {/* Action buttons: Cancel & Apply */}
               <div className="flex items-center justify-end gap-2 pt-2.5 mt-2 border-t border-[#224375]">
                 <button
                   type="button"
@@ -313,129 +287,8 @@ export const TopBar: React.FC = () => {
           )}
         </div>
 
-        {/* Plant Filter Dropdown (Replaces Model selection as requested) */}
-        <div className="relative" ref={plantDropdownRef}>
-          <button
-            onClick={() => {
-              setPlantDropdownOpen(!plantDropdownOpen);
-              setPlantSearch('');
-            }}
-            type="button"
-            className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all cursor-pointer ${
-              filters.plantId !== 'all'
-                ? 'border-sky-500/70 bg-[#1a345c] text-white shadow-sm'
-                : 'border-[#224375] bg-[#152744] text-slate-200 hover:text-white hover:border-sky-500/50'
-            }`}
-            title="Filter by Manufacturing Plant"
-          >
-            <Factory size={13} className="text-sky-400 shrink-0" />
-            <span className="text-[11px] font-medium text-slate-400">Plant:</span>
-            <span className="font-semibold text-white max-w-[150px] truncate">
-              {getPlantDisplayText()}
-            </span>
-            <ChevronDown size={13} className={`text-slate-400 transition-transform ${plantDropdownOpen ? 'rotate-180 text-sky-400' : ''}`} />
-          </button>
-
-          {plantDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-80 rounded-xl border border-[#224375] bg-[#12233f] p-3 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex items-center justify-between pb-2 border-b border-[#224375] mb-2.5">
-                <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <Factory size={13} className="text-sky-400" />
-                  Manufacturing Plant
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setPlantDropdownOpen(false)}
-                  className="text-slate-400 hover:text-white transition-colors"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-
-              {/* Search within Plant dropdown */}
-              <div className="relative mb-2">
-                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search plant or country (e.g. Solihull, Nitra)..."
-                  value={plantSearch}
-                  onChange={(e) => setPlantSearch(e.target.value)}
-                  className="w-full rounded-md border border-[#224375] bg-[#152744] py-1 pl-7 pr-3 text-xs text-white placeholder-slate-400 focus:border-sky-400 focus:outline-none"
-                />
-              </div>
-
-              {/* All Plants Option */}
-              <div 
-                className={`flex items-center justify-between py-2 px-2.5 rounded cursor-pointer border-b border-[#224375]/60 mb-1 transition-colors ${
-                  filters.plantId === 'all' ? 'bg-sky-500/20 text-sky-300 font-semibold' : 'text-slate-200 hover:bg-[#1a3156]'
-                }`}
-                onClick={() => {
-                  setFilter('plantId', 'all');
-                  setPlantDropdownOpen(false);
-                }}
-              >
-                <div>
-                  <div className="text-xs font-medium">(All Manufacturing Plants)</div>
-                  <div className="text-[10px] text-slate-400">Global fleet across 6 centres</div>
-                </div>
-                {filters.plantId === 'all' && <Check size={14} className="text-sky-400 shrink-0" />}
-              </div>
-
-              {/* List of Plants */}
-              <div className="max-h-60 overflow-y-auto space-y-1 pr-1 py-1">
-                {filteredPlants.length === 0 ? (
-                  <div className="text-[11px] text-slate-400 py-3 text-center">No manufacturing plants found</div>
-                ) : (
-                  filteredPlants.map(plant => {
-                    const isSelected = filters.plantId === plant.id;
-                    return (
-                      <div
-                        key={plant.id}
-                        onClick={() => {
-                          setFilter('plantId', plant.id);
-                          setPlantDropdownOpen(false);
-                        }}
-                        className={`flex items-center justify-between px-2.5 py-1.5 rounded text-xs transition-colors cursor-pointer select-none ${
-                          isSelected ? 'bg-sky-500/20 text-sky-200 font-semibold border border-sky-500/30' : 'text-slate-300 hover:bg-[#1a3156]'
-                        }`}
-                      >
-                        <div className="min-w-0 pr-2">
-                          <div className="truncate font-medium text-white">{plant.name}</div>
-                          <div className="text-[10px] text-slate-400 flex items-center gap-1.5 font-mono">
-                            <span>{plant.country}</span>
-                            <span>·</span>
-                            <span>{plant.totalProductionYTD.toLocaleString()} YTD</span>
-                            <span>·</span>
-                            <span className="text-sky-300">{plant.simActivationRate}% SIM</span>
-                          </div>
-                        </div>
-                        {isSelected && <Check size={14} className="text-sky-400 shrink-0" />}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-
-              {filters.plantId !== 'all' && (
-                <div className="pt-2 mt-2 border-t border-[#224375] flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFilter('plantId', 'all');
-                      setPlantDropdownOpen(false);
-                    }}
-                    className="text-[11px] text-slate-400 hover:text-sky-300 transition-colors"
-                  >
-                    Reset to All Plants
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
         {/* Reset Filter Button if active */}
-        {(filters.plantId !== 'all' || filters.status !== 'all' || (filters.businessUnits && filters.businessUnits.length > 0) || filters.searchQuery) && (
+        {(filters.plantId !== 'all' || filters.model !== 'all' || filters.status !== 'all' || (filters.businessUnits && filters.businessUnits.length > 0) || filters.searchQuery) && (
           <button
             onClick={resetFilters}
             title="Reset global filters"
@@ -526,7 +379,7 @@ export const TopBar: React.FC = () => {
           />
           <div className="hidden lg:flex flex-col text-left">
             <span className="text-xs font-semibold text-white">RD</span>
-            <span className="text-[10px] text-slate-300">VP Connected Car</span>
+            <span className="text-[10px] text-slate-300">VP Connected Vehicle</span>
           </div>
         </div>
       </div>

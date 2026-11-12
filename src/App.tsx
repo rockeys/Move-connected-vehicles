@@ -4,7 +4,7 @@ import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
 
 import { ExecutiveOverview } from './components/modules/ExecutiveOverview';
-import { CountryVehicleDetails } from './components/modules/CountryVehicleDetails';
+import { CountryLevelDetails } from './components/modules/CountryLevelDetails';
 import { PlantIntelligence } from './components/modules/PlantIntelligence';
 import { FleetManagement } from './components/modules/FleetManagement';
 import { VehicleCockpit360 } from './components/modules/VehicleCockpit360';
@@ -20,14 +20,15 @@ import { AdminConfiguration } from './components/modules/AdminConfiguration';
 import { CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
 
 const MainLayout: React.FC = () => {
-  const { activeModule, activeToast, sidebarCollapsed, setSidebarCollapsed } = useApp();
+  const { activeModule, activeToast } = useApp();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const renderActiveModule = () => {
     switch (activeModule) {
       case 'executive-overview':
         return <ExecutiveOverview />;
       case 'country-details':
-        return <CountryVehicleDetails />;
+        return <CountryLevelDetails />;
       case 'plant-intelligence':
         return <PlantIntelligence />;
       case 'fleet-management':
@@ -65,11 +66,14 @@ const MainLayout: React.FC = () => {
       {/* Main Viewport Container */}
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
         {/* Top Navigation & Global Search */}
-        <TopBar />
+        <TopBar 
+          sidebarCollapsed={sidebarCollapsed} 
+          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+        />
 
         {/* Dynamic Content Viewport */}
         <main className="flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
-          <div className="mx-auto max-w-7xl pb-12">
+          <div className="mx-auto max-w-7xl pb-0">
             {renderActiveModule()}
           </div>
         </main>

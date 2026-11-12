@@ -233,10 +233,10 @@ export const CountryVehicleDetails: React.FC = () => {
             <div className="text-2xl font-bold font-mono text-white tracking-tight">
               {currentMetrics.usage.activeConnectedVehicles.toLocaleString()} units
             </div>
-            <div className="text-[11px] text-emerald-400 font-mono mt-1 flex items-center gap-1">
+            {/* <div className="text-[11px] text-emerald-400 font-mono mt-1 flex items-center gap-1">
               <CheckCircle2 size={12} />
               <span>{currentMetrics.usage.connectivityRatio} Move SIM Activation Nominal</span>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -253,14 +253,14 @@ export const CountryVehicleDetails: React.FC = () => {
             <div className="text-2xl font-bold font-mono text-sky-300 tracking-tight">
               {currentMetrics.usage.dataConsumption}
             </div>
-            <div className="text-[11px] text-slate-300 font-mono mt-1">
+            {/* <div className="text-[11px] text-slate-300 font-mono mt-1">
               {currentMetrics.usage.sessions} Active Data Sessions
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Commercial Sales Volume */}
-        <div className="rounded-xl border border-[#224375] bg-[#12233f] p-4 shadow-lg flex flex-col justify-between">
+        {/* <div className="rounded-xl border border-[#224375] bg-[#12233f] p-4 shadow-lg flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-300 font-medium flex items-center gap-1.5">
               <TrendingUp size={14} className="text-emerald-400" />
@@ -276,7 +276,7 @@ export const CountryVehicleDetails: React.FC = () => {
               {currentMetrics.sale.revenueUSD} · {currentMetrics.sale.yoyGrowth} YoY
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Primary Network Operator */}
         <div className="rounded-xl border border-[#224375] bg-[#12233f] p-4 shadow-lg flex flex-col justify-between">
@@ -291,9 +291,9 @@ export const CountryVehicleDetails: React.FC = () => {
             <div className="text-lg font-bold text-white truncate">
               {currentMetrics.usage.primaryCarriers[0] || 'Tata Move Global'}
             </div>
-            <div className="text-[11px] text-sky-300 font-mono mt-1">
+            {/* <div className="text-[11px] text-sky-300 font-mono mt-1">
               {currentMetrics.usage.avgLatencyMs}ms Average Round-Trip Latency
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

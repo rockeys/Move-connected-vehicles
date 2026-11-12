@@ -318,9 +318,9 @@ export const VehicleCockpit360: React.FC = () => {
                       RSP Handshake: Certified
                     </span>
                   </div>
-                  <p className="text-xs text-slate-200">
+                  {/* <p className="text-xs text-slate-200">
                     Dual embedded eSIM architecture powered by Tata Communications Move™. The primary eSIM provides high-bandwidth data channels for Pivi Pro cloud streaming, SOTA ECU flashing, and 360° PVM video telematics. The secondary fallback eUICC channel is reserved for ultra-low latency telematics and regulatory eCall emergency systems.
-                  </p>
+                  </p> */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 font-mono text-xs">
                     <div className="rounded border border-[#224375] bg-[#152744] p-2">
                       <span className="text-[10px] text-slate-400 block">ICCID</span>
@@ -355,9 +355,9 @@ export const VehicleCockpit360: React.FC = () => {
                       OS Version: 4.2.1-JLR
                     </span>
                   </div>
-                  <p className="text-xs text-slate-200">
+                  {/* <p className="text-xs text-slate-200">
                     Pivi Pro 13.1-inch curved glass infotainment system. Connects directly through Tata Move high-speed cellular routing to stream real-time 3D cloud navigation maps, over-the-air media updates, and predictive range optimization.
-                  </p>
+                  </p> */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 font-mono text-xs">
                     <div className="rounded border border-[#224375] bg-[#152744] p-2">
                       <span className="text-[10px] text-slate-400 block">Active Data Session</span>
@@ -392,9 +392,9 @@ export const VehicleCockpit360: React.FC = () => {
                       Status: {selectedVehicle.powertrainStatus}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-200">
+                  {/* <p className="text-xs text-slate-200">
                     High-voltage pack telemetry streamed at 10Hz through the Tata Move low-latency telemetry gateway. Monitored for cell balance deviations, internal resistance thermals, and DC fast charge curve profiling.
-                  </p>
+                  </p> */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 font-mono text-xs">
                     <div className="rounded border border-[#224375] bg-[#152744] p-2">
                       <span className="text-[10px] text-slate-400 block">State of Health (SoH)</span>
@@ -429,9 +429,9 @@ export const VehicleCockpit360: React.FC = () => {
                       PSAP Handshake: Verified
                     </span>
                   </div>
-                  <p className="text-xs text-slate-200">
+                  {/* <p className="text-xs text-slate-200">
                     Autonomous crash notification and emergency rescue bearer. Conforms to UN ECE R144 requirements, transmitting Minimum Set of Data (MSD) including GNSS location, crash severity vector, and occupant count in less than 2.8 seconds.
-                  </p>
+                  </p> */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 font-mono text-xs">
                     <div className="rounded border border-[#224375] bg-[#152744] p-2">
                       <span className="text-[10px] text-slate-400 block">Emergency Bearer</span>
@@ -456,7 +456,7 @@ export const VehicleCockpit360: React.FC = () => {
           </div>
 
           {/* Quick Metrics Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
             <div className="rounded-xl border border-[#224375] bg-[#152744] p-4">
               <span className="text-[10px] uppercase font-bold text-slate-400 font-mono">Manufacturing Origin</span>
               <div className="text-sm font-bold text-white mt-1">{selectedVehicle.plantName}</div>
@@ -475,7 +475,7 @@ export const VehicleCockpit360: React.FC = () => {
               <div className="text-[11px] text-slate-300 font-mono mt-0.5">Up: {selectedVehicle.dataUploadMb}M · Dn: {selectedVehicle.dataDownloadMb}M</div>
             </div>
 
-            <div className="rounded-xl border border-[#224375] bg-[#152744] p-4">
+            {/* <div className="rounded-xl border border-[#224375] bg-[#152744] p-4">
               <span className="text-[10px] uppercase font-bold text-slate-400 font-mono">Diagnostic State</span>
               <div className="text-sm font-bold text-white mt-1">
                 {selectedVehicle.dtcCodes.length === 0 ? 'All Systems Clear' : `${selectedVehicle.dtcCodes.length} DTCs Flagged`}
@@ -483,7 +483,7 @@ export const VehicleCockpit360: React.FC = () => {
               <div className="text-[11px] text-slate-300 mt-0.5">
                 Last ping: {selectedVehicle.lastConnected}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

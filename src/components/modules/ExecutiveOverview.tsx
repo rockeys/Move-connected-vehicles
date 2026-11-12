@@ -21,6 +21,9 @@ import { useApp } from '../../context/AppContext';
 import { GlobalVehicleMap } from '../common/GlobalVehicleMap';
 import { DashboardTrendCharts } from './DashboardTrendCharts';
 import { JLR_PLANTS, INCIDENT_ALERTS } from '../../data/mockData';
+import { NumberOfDevicesWidget } from './widgets/NumberOfDevicesWidget';
+import { DataUsageByActivityWidget } from './widgets/DataUsageByActivityWidget';
+import { DataUsageStackedWidget } from './widgets/DataUsageStackedWidget';
 
 export const ExecutiveOverview: React.FC = () => {
   const { setActiveModule, filters, setFilter, resetFilters, selectedPlant, navigateToPlant, navigateToCockpit } = useApp();
@@ -43,18 +46,18 @@ export const ExecutiveOverview: React.FC = () => {
 
   // Top-Level 12 KPI Cards Specification (Dynamically adapts to plant selection)
   const kpis = [
-    {
-      id: 'mfg',
-      title: 'Total Vehicles Manufactured',
-      value: totalMfg.toLocaleString(),
-      change: isPlantFiltered ? `Plant YTD` : '+12.4%',
-      isPositive: true,
-      subtext: isPlantFiltered ? `YTD at ${selectedPlant.name}` : 'YTD across 6 global plants',
-      icon: Factory,
-      sparkline: [40, 52, 60, 68, 85, 94, 100],
-      status: 'Optimal',
-      targetModule: 'plant-intelligence' as const
-    },
+    // {
+    //   id: 'mfg',
+    //   title: 'Total Vehicles Manufactured',
+    //   value: totalMfg.toLocaleString(),
+    //   change: isPlantFiltered ? `Plant YTD` : '+12.4%',
+    //   isPositive: true,
+    //   subtext: isPlantFiltered ? `YTD at ${selectedPlant.name}` : 'YTD across 6 global plants',
+    //   icon: Factory,
+    //   sparkline: [40, 52, 60, 68, 85, 94, 100],
+    //   status: 'Optimal',
+    //   targetModule: 'plant-intelligence' as const
+    // },
     {
       id: 'conn',
       title: 'Total Connected Vehicles',
@@ -65,7 +68,7 @@ export const ExecutiveOverview: React.FC = () => {
       icon: Car,
       sparkline: [38, 48, 55, 64, 78, 89, 97],
       status: 'Optimal',
-      targetModule: 'fleet-management' as const
+      targetModule: 'country-details' as const
     },
     {
       id: 'sims',
@@ -77,11 +80,11 @@ export const ExecutiveOverview: React.FC = () => {
       icon: SimCardIcon,
       sparkline: [35, 45, 58, 68, 82, 92, 98],
       status: 'Optimal',
-      targetModule: 'sim-management' as const
+      targetModule: 'country-details' as const
     },
     {
       id: 'online',
-      title: 'Vehicles Online',
+      title: 'Tolling Vehicles',
       value: onlineVehicles.toLocaleString(),
       change: isPlantFiltered ? 'Live Active' : '+4.2%',
       isPositive: true,
@@ -91,30 +94,7 @@ export const ExecutiveOverview: React.FC = () => {
       status: 'Optimal',
       targetModule: 'fleet-management' as const
     },
-    {
-      id: 'avail',
-      title: 'Connectivity Availability',
-      value: `${plantAvail}%`,
-      change: '+0.03%',
-      isPositive: true,
-      subtext: isPlantFiltered ? `${selectedPlant.shortName} SLA compliance` : 'Exceeding 99.95% JLR SLA',
-      icon: ShieldCheck,
-      sparkline: [99.7, 99.8, 99.85, 99.9, 99.95, 99.98, 99.98],
-      status: 'Optimal',
-      targetModule: 'network-operations' as const
-    },
-    {
-      id: 'net_uptime',
-      title: 'Network Uptime',
-      value: '99.991%',
-      change: '+0.01%',
-      isPositive: true,
-      subtext: isPlantFiltered ? selectedPlant.primaryOperator.split('/')[0] : 'Global telco carrier mesh',
-      icon: Radio,
-      sparkline: [99.9, 99.92, 99.94, 99.96, 99.98, 99.99, 99.99],
-      status: 'Optimal',
-      targetModule: 'network-operations' as const
-    },
+    
     {
       id: 'data',
       title: 'Total Data Consumption',
@@ -130,7 +110,7 @@ export const ExecutiveOverview: React.FC = () => {
     {
       id: 'voice',
       title: 'Total Voice Consumption',
-      value: `${voiceMins}M Mins`,
+      value: `${voiceMins}Hrs`,
       change: '+8.6%',
       isPositive: true,
       subtext: isPlantFiltered ? `eCall & concierge from ${selectedPlant.shortName}` : 'eCall, bCall & concierge VoIP',
@@ -152,17 +132,54 @@ export const ExecutiveOverview: React.FC = () => {
       targetModule: 'sim-management' as const
     },
     {
-      id: 'alerts',
-      title: 'Active Alerts',
-      value: `${activeAlerts}`,
-      change: isPlantFiltered ? `${selectedPlant.defectRatePpm} PPM` : '-18.5%',
-      isPositive: isPlantFiltered ? selectedPlant.defectRatePpm < 30 : true,
-      subtext: isPlantFiltered ? `Factory & EOL alerts (${selectedPlant.city})` : '0.03% of connected fleet',
-      icon: AlertTriangle,
-      sparkline: [195, 182, 170, 162, 154, 148, 142],
-      status: activeAlerts > 15 ? 'Watch' : 'Optimal',
-      targetModule: 'alerts-incidents' as const
+      id: 'sms',
+      title: 'Platform Availability',
+      value: `${plantAvail} %`,
+       change: '+0.04%',
+      isPositive: true,
+      subtext: isPlantFiltered ? `Move Platform Availability` : 'Move Platform Availability',
+      icon: MessageSquare,
+      sparkline: [11.2, 12.5, 13.8, 15.2, 16.4, 17.5, 18.6],
+      status: 'Optimal',
+      targetModule: 'sim-management' as const
+    },
+    {
+      id: 'avail',
+      title: 'RSP Availability',
+      value: `${plantAvail} %`,
+       change: '+0.03%',
+      isPositive: true,
+      subtext: isPlantFiltered ? `SM-SR/SM-DP` : 'SM-SR/SM-DP',
+      icon: MessageSquare,
+      sparkline: [11.2, 12.5, 13.8, 15.2, 16.4, 17.5, 18.6],
+      status: 'Optimal',
+      targetModule: 'sim-management' as const
     }
+    // {
+    //   id: 'avail',
+    //   title: 'Platform Availability',
+    //   value: `${plantAvail}%`,
+    //   change: '+0.03%',
+    //   isPositive: true,
+    //   subtext: isPlantFiltered ? `${selectedPlant.shortName} SLA compliance` : 'Exceeding 99.95% JLR SLA',
+    //   icon: ShieldCheck,
+    //   sparkline: [99.7, 99.8, 99.85, 99.9, 99.95, 99.98, 99.98],
+    //   status: 'Optimal',
+    //   targetModule: 'network-operations' as const
+    // }
+    
+    // {
+    //   id: 'alerts',
+    //   title: 'Active Alerts',
+    //   value: `${activeAlerts}`,
+    //   change: isPlantFiltered ? `${selectedPlant.defectRatePpm} PPM` : '-18.5%',
+    //   isPositive: isPlantFiltered ? selectedPlant.defectRatePpm < 30 : true,
+    //   subtext: isPlantFiltered ? `Factory & EOL alerts (${selectedPlant.city})` : '0.03% of connected fleet',
+    //   icon: AlertTriangle,
+    //   sparkline: [195, 182, 170, 162, 154, 148, 142],
+    //   status: activeAlerts > 15 ? 'Watch' : 'Optimal',
+    //   targetModule: 'alerts-incidents' as const
+    // }
   ];
 
   // Model-wise connectivity breakdown (filters by plant if selected)
@@ -223,9 +240,12 @@ export const ExecutiveOverview: React.FC = () => {
           </button>
         </div>
       )}
+      
 
+      {/* Global Interactive Map Section */}
+      <GlobalVehicleMap />
       {/* 12 Top-Level KPI Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3.5">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
@@ -287,16 +307,26 @@ export const ExecutiveOverview: React.FC = () => {
         })}
       </div>
 
-      {/* Enterprise Telematics & Connectivity Trend Charts */}
-      <DashboardTrendCharts />
+      {/* Executive Telematics Analytics & Device Distribution (3 Widgets from Specification) */}
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+          <NumberOfDevicesWidget />
+          <DataUsageByActivityWidget />
+        </div>
+        <div className="w-full">
+          <DataUsageStackedWidget />
+        </div>
+      </div>
 
-      {/* Global Interactive Map Section */}
-      <GlobalVehicleMap />
+      {/* Enterprise Telematics & Connectivity Trend Charts */}
+      {/* <DashboardTrendCharts /> */}
+
+      
 
       
 
       {/* Critical Incidents Section in Executive View */}
-      <div className="rounded-xl border border-[#224375] bg-[#1a3156] p-5 shadow-lg">
+      {/* <div className="rounded-xl border border-[#224375] bg-[#1a3156] p-5 shadow-lg">
         <div className="flex items-center justify-between pb-3 border-b border-[#224375]/80 mb-3">
           <div className="flex items-center gap-2">
             <AlertTriangle size={15} className="text-amber-400" />
@@ -343,7 +373,7 @@ export const ExecutiveOverview: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

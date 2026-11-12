@@ -139,7 +139,6 @@
   background: #152744 !important;
 }
 
-/* Custom Geographical Split Leaflet Tooltip matching screenshot */
 .leaflet-tooltip.custom-geo-tooltip {
   background-color: #0c182a !important;
   color: #f1f5f9 !important;
@@ -164,5 +163,121 @@
 .leaflet-tooltip-right.custom-geo-tooltip:before {
   border-right-color: #0c182a !important;
 }
+
+/* ==========================================================================
+   Bird's Eye 3D Terrain Perspective & Holographic Beacons
+   ========================================================================== */
+
+/* 3D Perspective Stage Viewport */
+.birds-eye-viewport {
+  perspective: 1200px;
+  perspective-origin: 50% 65%;
+  overflow: hidden;
+  position: relative;
+}
+
+.birds-eye-surface {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Atmospheric Horizon Curvature & Sky Glow */
+.horizon-atmosphere-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 165, 233, 0.35) 0%,
+    rgba(30, 64, 175, 0.22) 35%,
+    rgba(15, 23, 42, 0.12) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 350;
+  box-shadow: inset 0 2px 14px rgba(56, 189, 248, 0.4);
+}
+
+.horizon-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(56, 189, 248, 0.3) 15%,
+    rgba(56, 189, 248, 0.8) 50%,
+    rgba(56, 189, 248, 0.3) 85%,
+    transparent 100%
+  );
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+/* Tactical Terrain Satellite Filter */
+.tactical-terrain-layer {
+  filter: contrast(1.15) brightness(0.92) saturate(1.2);
+}
+
+.dark-tactical-filter {
+  filter: brightness(0.72) contrast(1.4) saturate(1.1) hue-rotate(195deg);
+}
+
+/* 3D Holographic Marker Stalk Animation */
+@keyframes beaconBeamPulse {
+  0%, 100% {
+    opacity: 0.75;
+    box-shadow: 0 0 12px currentColor, inset 0 0 4px currentColor;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 24px currentColor, inset 0 0 8px currentColor;
+  }
+}
+
+@keyframes radarWaveExpand {
+  0% {
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(3.2) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes arcFlowDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.animate-beacon-beam {
+  animation: beaconBeamPulse 1.8s ease-in-out infinite;
+}
+
+.animate-radar-wave {
+  animation: radarWaveExpand 2.6s cubic-bezier(0.1, 0.4, 0.6, 1) infinite;
+}
+
+.animate-arc-flow {
+  animation: arcFlowDash 1.2s linear infinite;
+}
+
+/* Holographic 3D Billboard Container: Stays facing the camera */
+.beacon-billboard {
+  transform-origin: bottom center;
+  transition: transform 0.3s ease, filter 0.2s ease;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.8));
+}
+
+.beacon-billboard:hover {
+  filter: drop-shadow(0 12px 24px rgba(56, 189, 248, 0.5));
+}
+
 
 
