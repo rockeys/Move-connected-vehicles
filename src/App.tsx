@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
@@ -22,6 +22,39 @@ import { CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
 const MainLayout: React.FC = () => {
   const { activeModule, activeToast } = useApp();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  // Collapse (toggle off) sidebar on click outside anywhere
+  useEffect(() => {
+    if (sidebarCollapsed) return;
+
+    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      // If click originated inside the sidebar, keep it open
+      if (sidebarRef.current && sidebarRef.current.contains(target)) {
+        return;
+      }
+
+      // If click was on the sidebar toggle button in TopBar, let button onClick handle it
+      const toggleButton = document.getElementById('sidebar-toggle-btn');
+      if (toggleButton && toggleButton.contains(target)) {
+        return;
+      }
+
+      // Clicked anywhere outside the sidebar -> toggle off
+      setSidebarCollapsed(true);
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+    };
+  }, [sidebarCollapsed]);
 
   const renderActiveModule = () => {
     switch (activeModule) {
@@ -61,7 +94,7 @@ const MainLayout: React.FC = () => {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#0e1e36] text-slate-100 font-sans bg-cockpit-grid">
       {/* Collapsible Left Navigation */}
-      <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+      <Sidebar ref={sidebarRef} collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 
       {/* Main Viewport Container */}
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
@@ -73,7 +106,7 @@ const MainLayout: React.FC = () => {
 
         {/* Dynamic Content Viewport */}
         <main className="flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
-          <div className="mx-auto max-w-7xl pb-0">
+          <div className="mx-auto max-w-7xl pb-12">
             {renderActiveModule()}
           </div>
         </main>
