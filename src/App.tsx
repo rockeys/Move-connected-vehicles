@@ -106,7 +106,7 @@ const MainLayout: React.FC = () => {
 
         {/* Dynamic Content Viewport */}
         <main className="flex-1 overflow-y-auto px-6 py-6 scroll-smooth">
-          <div className="mx-auto max-w-7xl pb-12">
+          <div className="mx-auto max-w-7xl pb-0">
             {renderActiveModule()}
           </div>
         </main>

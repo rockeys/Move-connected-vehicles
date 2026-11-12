@@ -138,7 +138,7 @@ export const ExecutiveOverview: React.FC = () => {
        change: '+0.04%',
       isPositive: true,
       subtext: isPlantFiltered ? `Move Platform Availability` : 'Move Platform Availability',
-      icon: MessageSquare,
+      icon: ShieldCheck,
       sparkline: [11.2, 12.5, 13.8, 15.2, 16.4, 17.5, 18.6],
       status: 'Optimal',
       targetModule: 'sim-management' as const
@@ -150,7 +150,7 @@ export const ExecutiveOverview: React.FC = () => {
        change: '+0.03%',
       isPositive: true,
       subtext: isPlantFiltered ? `SM-SR/SM-DP` : 'SM-SR/SM-DP',
-      icon: MessageSquare,
+      icon: ShieldCheck,
       sparkline: [11.2, 12.5, 13.8, 15.2, 16.4, 17.5, 18.6],
       status: 'Optimal',
       targetModule: 'sim-management' as const
