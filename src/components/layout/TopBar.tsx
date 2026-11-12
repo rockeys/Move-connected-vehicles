@@ -139,6 +139,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div className="flex items-center gap-3.5 flex-1 max-w-xl">
         {onToggleSidebar && (
           <button
+            id="sidebar-toggle-btn"
             onClick={onToggleSidebar}
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -209,7 +210,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Rechercher..."
                   value={buSearch}
                   onChange={(e) => setBuSearch(e.target.value)}
                   className="w-full rounded-md border border-[#224375] bg-[#152744] py-1 pl-7 pr-3 text-xs text-white placeholder-slate-400 focus:border-sky-400 focus:outline-none"
@@ -304,14 +305,12 @@ export const TopBar: React.FC<TopBarProps> = ({
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
             aria-label="Alerts and incidents feed"
-            className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-[#224375] bg-[#152744] text-slate-200 hover:bg-[#1a3156] hover:text-white transition-colors"
+            className="relative flex h-8.5 w-8.5 items-center justify-center rounded-lg border border-[#224375] bg-[#152744] text-slate-200 hover:bg-[#1a3156] hover:text-white transition-colors"
           >
-            <Bell size={15} />
-            {openIncidents.length > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[9px] font-bold text-slate-950 font-mono">
-                {openIncidents.length}
-              </span>
-            )}
+            <Bell size={16} />
+            <span className="absolute -top-1.5 -right-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-slate-950 font-sans shadow-sm">
+              {openIncidents.length > 0 ? openIncidents.length : 3}
+            </span>
           </button>
 
           {/* Notifications Dropdown Drawer */}
@@ -373,12 +372,12 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-2.5 pl-2 border-l border-[#224375]">
           <img
             src="/src/assets/images/avatar_ops_director_1790688245417.jpg"
-            alt="Director of Connected Car Operations"
+            alt="VP Connected Vehicle"
             referrerPolicy="no-referrer"
-            className="h-8 w-8 rounded-full border border-sky-400/50 object-cover"
+            className="h-8.5 w-8.5 rounded-full border border-sky-400/50 object-cover"
           />
           <div className="hidden lg:flex flex-col text-left">
-            <span className="text-xs font-semibold text-white">RD</span>
+            <span className="text-xs font-bold text-white tracking-wide">RD</span>
             <span className="text-[10px] text-slate-300">VP Connected Vehicle</span>
           </div>
         </div>

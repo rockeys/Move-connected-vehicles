@@ -1090,7 +1090,7 @@ export const CountryLevelDetails: React.FC = () => {
           <div>
             <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
               <Car size={16} className="text-sky-400" />
-              <span>Live Sample Connected Vehicles in {meta.name}</span>
+              <span>Connected Vehicles in {meta.name}</span>
             </h3>
             {/* <p className="text-xs text-slate-300 mt-0.5">
               Click any vehicle row to inspect attached TCU devices, EID, Profiles, and Active / Fallback ICCIDs

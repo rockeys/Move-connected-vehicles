@@ -303,9 +303,6 @@ export const TAB_SPECS = {
     colorLight: '#60a5fa',  // Top cap highlight
     glowColor: 'rgba(37, 99, 235, 0.18)',
     description: 'Total Cellular 5G/4G Broadband & Telematics Data Traffic',
-    bandLabel: 'FAIR-USE TARGET THRESHOLD (250 - 500 GB)',
-    bandMin: 250,
-    bandMax: 500,
   },
   sms: {
     key: 'sms' as UsageCategoryTab,
@@ -316,9 +313,6 @@ export const TAB_SPECS = {
     colorLight: '#c084fc',  // Top cap highlight
     glowColor: 'rgba(147, 51, 234, 0.18)',
     description: 'Total Binary OTA & Diagnostic SMS Message Traffic',
-    bandLabel: 'CARRIER MONTHLY QUOTA THRESHOLD (150 - 300 K SMS)',
-    bandMin: 150,
-    bandMax: 300,
   },
   voice: {
     key: 'voice' as UsageCategoryTab,
@@ -329,9 +323,6 @@ export const TAB_SPECS = {
     colorLight: '#2dd4bf',  // Top cap highlight
     glowColor: 'rgba(13, 148, 136, 0.18)',
     description: 'Total Emergency eCall & Roadside VoLTE Voice Airtime',
-    bandLabel: 'MONTHLY EMERGENCY VOICE BAND (40 - 100 Hours)',
-    bandMin: 40,
-    bandMax: 100,
   }
 };
 
@@ -515,78 +506,78 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
     }
   }, [selectedMakeFilter, selectedModelFilter, selectedDeviceTypeFilter, activeUsageTab]);
 
-  // Coordinate mapping with generous top headroom
-  const rawMax = Math.max(...chartItems.map(it => it.total), tabConfig.bandMax * 1.15, 60);
-  const maxScale = rawMax <= 150
-    ? Math.ceil(rawMax / 25) * 25
+  // Dynamic scale calculation based on actual bar values with modest 15% headroom
+  const dataMax = Math.max(...chartItems.map(it => it.total), 1);
+  const rawMax = dataMax * 1.15;
+  const maxScale = rawMax <= 20
+    ? Math.ceil(rawMax / 5) * 5
+    : rawMax <= 50
+    ? Math.ceil(rawMax / 10) * 10
+    : rawMax <= 120
+    ? Math.ceil(rawMax / 20) * 20
+    : rawMax <= 250
+    ? Math.ceil(rawMax / 50) * 50
     : rawMax <= 500
-    ? Math.ceil(rawMax / 100) * 100
-    : Math.ceil(rawMax / 250) * 250;
+    ? Math.ceil(rawMax / 50) * 50
+    : Math.ceil(rawMax / 100) * 100;
 
-  const y0 = 330; // baseline
-  const yTop = 70; // top gridline with 70px generous top headroom inside 400px viewBox
-  const plotHeight = y0 - yTop; // 260px
+  const y0 = 220; // baseline
+  const yTop = 25; // top gridline with compact 25px top margin
+  const plotHeight = y0 - yTop; // 195px
   const pxPerUnit = plotHeight / maxScale;
 
   const itemWidth = chartItems.length <= 2 ? 110 : chartItems.length <= 4 ? 85 : 68;
-  const xStart = 100;
-  const xEnd = 910;
+  const xStart = 85;
+  const xEnd = 925;
   const availableWidth = xEnd - xStart;
   const step = availableWidth / Math.max(1, chartItems.length);
 
-  // Band coordinates
-  const bandMin = Math.min(tabConfig.bandMin, maxScale * 0.4);
-  const bandMax = Math.min(tabConfig.bandMax, maxScale * 0.85);
-  const yBandTop = y0 - (bandMax * pxPerUnit);
-  const yBandBottom = y0 - (bandMin * pxPerUnit);
-  const bandHeight = Math.max(20, yBandBottom - yBandTop);
-
   // Bulletproof tooltip placement calculation that NEVER clips and NEVER covers the target bar
   const calculatePlacement = (xCenter: number, barTopY: number, barWidth: number) => {
-    const cardW = 260; // Card width in SVG coordinate scale
-    const cardH = 150; // Card height in SVG coordinate scale
+    const cardW = 250; // Card width in SVG coordinate scale
+    const cardH = 135; // Card height in SVG coordinate scale
 
-    // Case 1: Lower/medium bar with enough headroom above it (barTopY >= 170)
-    if (barTopY >= 170) {
-      const cardX = Math.max(85, Math.min(670, xCenter - cardW / 2));
-      const cardY = barTopY - cardH - 12; // 12px gap above the bar
+    // Case 1: Lower/medium bar with enough headroom above it (barTopY >= 135)
+    if (barTopY >= 135) {
+      const cardX = Math.max(65, Math.min(680, xCenter - cardW / 2));
+      const cardY = barTopY - cardH - 10;
       const arrowX = xCenter - cardX;
       const arrowLeftPct = Math.max(12, Math.min(88, (arrowX / cardW) * 100));
 
       return {
         placement: 'top' as const,
         leftPct: (cardX / 950) * 100,
-        topPct: (cardY / 400) * 100,
+        topPct: (cardY / 270) * 100,
         arrowLeftPct,
         arrowTopPct: undefined
       };
     } 
     // Case 2: Tall bar on left half of chart -> Place to the RIGHT of the bar
     else if (xCenter < 500) {
-      const cardX = xCenter + barWidth / 2 + 14;
-      const cardY = Math.max(20, Math.min(330 - cardH, barTopY));
-      const arrowY = Math.max(20, Math.min(cardH - 20, (barTopY + 25) - cardY));
+      const cardX = xCenter + barWidth / 2 + 12;
+      const cardY = Math.max(12, Math.min(220 - cardH, barTopY));
+      const arrowY = Math.max(15, Math.min(cardH - 15, (barTopY + 20) - cardY));
       const arrowTopPct = Math.max(15, Math.min(85, (arrowY / cardH) * 100));
 
       return {
         placement: 'right' as const,
         leftPct: (cardX / 950) * 100,
-        topPct: (cardY / 400) * 100,
+        topPct: (cardY / 270) * 100,
         arrowLeftPct: undefined,
         arrowTopPct
       };
     } 
     // Case 3: Tall bar on right half of chart -> Place to the LEFT of the bar
     else {
-      const cardX = xCenter - barWidth / 2 - cardW - 14;
-      const cardY = Math.max(20, Math.min(330 - cardH, barTopY));
-      const arrowY = Math.max(20, Math.min(cardH - 20, (barTopY + 25) - cardY));
+      const cardX = xCenter - barWidth / 2 - cardW - 12;
+      const cardY = Math.max(12, Math.min(220 - cardH, barTopY));
+      const arrowY = Math.max(15, Math.min(cardH - 15, (barTopY + 20) - cardY));
       const arrowTopPct = Math.max(15, Math.min(85, (arrowY / cardH) * 100));
 
       return {
         placement: 'left' as const,
         leftPct: (cardX / 950) * 100,
-        topPct: (cardY / 400) * 100,
+        topPct: (cardY / 270) * 100,
         arrowLeftPct: undefined,
         arrowTopPct
       };
@@ -601,7 +592,7 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
   const hasActiveFilters = selectedMakeFilter !== 'All Makes' || selectedModelFilter !== 'All Models' || selectedDeviceTypeFilter !== 'All Device Types';
 
   return (
-    <div className="rounded-2xl border border-[#224375] bg-[#0c182a] p-5 shadow-xl space-y-4">
+    <div className="rounded-2xl border border-[#224375] bg-[#0c182a] p-4 shadow-xl space-y-3">
       {/* Header Bar matching font of Live Sample Connected Vehicles */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#224375]/70 pb-3">
         <div className="flex items-center gap-3 flex-wrap">
@@ -791,12 +782,12 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
         </div>
       </div>
 
-      {/* Chart SVG Canvas Box with Tooltip Popup & Legend */}
-      <div className="rounded-xl border border-[#1e3658] bg-[#071322] p-0 shadow-inner relative">
-        <div className="relative w-full overflow-x-auto scrollbar-thin scrollbar-thumb-sky-500/20 py-0">
-          <div className="relative min-w-[720px] h-[370px] sm:h-[400px]">
+      {/* Chart SVG Canvas Box with Tooltip Popup */}
+      <div className="rounded-xl border border-[#1e3658] bg-[#071322] p-3 shadow-inner relative">
+        <div className="relative w-full overflow-x-auto scrollbar-thin scrollbar-thumb-sky-500/20 py-1">
+          <div className="relative min-w-[700px] h-[260px] sm:h-[280px]">
             <svg
-              viewBox="0 0 950 400"
+              viewBox="0 0 950 270"
               preserveAspectRatio="none"
               className="w-full h-full overflow-visible font-mono select-none"
               onClick={() => setHoveredItem(null)}
@@ -811,16 +802,16 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
               ].map((tick) => (
                 <g key={tick.label}>
                   <line
-                    x1="85"
+                    x1="65"
                     y1={tick.y}
-                    x2="925"
+                    x2="935"
                     y2={tick.y}
                     stroke="#162c4a"
                     strokeDasharray="2 3"
                     strokeWidth="1"
                   />
                   <text
-                    x="75"
+                    x="55"
                     y={tick.y + 3.5}
                     fill="#768ba7"
                     textAnchor="end"
@@ -831,46 +822,6 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
                   </text>
                 </g>
               ))}
-
-              {/* Threshold Band */}
-              <rect
-                x="85"
-                y={yBandTop}
-                width="840"
-                height={bandHeight}
-                fill="rgba(14, 165, 233, 0.08)"
-              />
-              <line
-                x1="85"
-                y1={yBandTop}
-                x2="925"
-                y2={yBandTop}
-                stroke="#0284c7"
-                strokeDasharray="4 4"
-                strokeWidth="1"
-                strokeOpacity="0.8"
-              />
-              <line
-                x1="85"
-                y1={yBandBottom}
-                x2="925"
-                y2={yBandBottom}
-                stroke="#0284c7"
-                strokeDasharray="4 4"
-                strokeWidth="1"
-                strokeOpacity="0.8"
-              />
-              <text
-                x="915"
-                y={yBandTop + bandHeight / 2 + 3.5}
-                fill="#0284c7"
-                textAnchor="end"
-                fontSize="10"
-                fontWeight="bold"
-                letterSpacing="1"
-              >
-                {tabConfig.bandLabel}
-              </text>
 
               {/* Render Clean Single Solid Color Bars */}
               {chartItems.map((item, idx) => {
@@ -1131,23 +1082,6 @@ export const TelematicsUsageAnalytics: React.FC<TelematicsUsageAnalyticsProps> =
           </div>
         </div>
 
-        {/* Bottom Legend and Hints Bar */}
-        {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 mt-1 border-t border-[#183155] text-xs font-mono">
-          <div className="flex items-center gap-5 flex-wrap">
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-xs" style={{ backgroundColor: tabConfig.color }} />
-              <span className="text-slate-200 font-semibold">{tabConfig.title} ({tabConfig.unit})</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-0 border-b-2 border-dashed border-[#0284c7]" />
-              <span className="text-sky-400 font-medium text-[11px]">{tabConfig.bandLabel}</span>
-            </div>
-          </div>
-
-          <div className="text-[11px] text-slate-400 font-medium">
-            <span>Click any bar to drill down into devices • Single-color unified telemetry</span>
-          </div>
-        </div> */}
       </div>
     </div>
   );

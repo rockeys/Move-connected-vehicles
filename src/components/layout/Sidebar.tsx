@@ -1,26 +1,26 @@
 import React from 'react';
 import { 
-  LayoutDashboard, 
+  LayoutGrid,
   Factory, 
-  Car, 
-  Gauge, 
-  Radio, 
-  Activity, 
+  /* Car, */
+  /* Gauge, */
+  /* Radio, */
+  /* Activity, */
   Layers, 
-  TrendingUp, 
-  BarChart3, 
-  Sparkles, 
+  /* TrendingUp, */
+  /* BarChart3, */
+  /* Sparkles, */
   AlertTriangle, 
-  Settings, 
+  /* Settings, */
   ShieldCheck,
   Cpu,
   Globe
 } from 'lucide-react';
-import { SimCardIcon } from '../common/SimCardIcon';
+/* import { SimCardIcon } from '../common/SimCardIcon'; */
 import { NavigationModule } from '../../types';
 import { useApp } from '../../context/AppContext';
 
-interface SidebarProps {
+export interface SidebarProps {
   collapsed: boolean;
   setCollapsed?: (c: boolean) => void;
 }
@@ -38,16 +38,16 @@ interface NavSection {
   items: NavItem[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
+export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(({ collapsed, setCollapsed }, ref) => {
   const { activeModule, setActiveModule, incidents } = useApp();
 
-  const openIncidentsCount = incidents.filter(i => i.status !== 'Resolved').length;
+  const openIncidentsCount = incidents.filter(i => i.status !== 'Resolved').length || 3;
 
   const sections: NavSection[] = [
     {
       title: 'COMMAND',
       items: [
-        { id: 'executive-overview', label: 'Executive Overview', icon: LayoutDashboard },
+        { id: 'executive-overview', label: 'Executive Overview', icon: LayoutGrid },
         { id: 'country-details', label: 'Country Telematics', icon: Globe, badge: '6 Markets' }
       ]
     },
@@ -59,13 +59,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
         // { id: 'vehicle-360', label: 'Vehicle 360° Cockpit', icon: Gauge, badge: 'Live' }
       ]
     },
-    // {
-    //   title: 'CONNECTIVITY INFRASTRUCTURE',
-    //   items: [
-    //     { id: 'sim-management', label: 'SIM & Connectivity', icon: SimCardIcon },
-    //     { id: 'network-operations', label: 'Network Operations (NOC)', icon: Radio }
-    //   ]
-    // },
+    /*
+    {
+      title: 'CONNECTIVITY INFRASTRUCTURE',
+      items: [
+        { id: 'sim-management', label: 'SIM & Connectivity', icon: SimCardIcon },
+        { id: 'network-operations', label: 'Network Operations (NOC)', icon: Radio }
+      ]
+    },
+    */
     {
       title: 'VEHICLE INTELLIGENCE',
       items: [
@@ -73,43 +75,66 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
         { id: 'connected-apps', label: 'Connected Applications', icon: Layers }
       ]
     },
+    /*
     {
-      title: 'Alerts',
+      title: 'STRATEGY & AI',
       items: [
-        // { id: 'business-benefits', label: 'Value Realization', icon: TrendingUp, badge: '$42.8M' },
-        // { id: 'analytics-reports', label: 'Analytics & Reports', icon: BarChart3 },
-        // { id: 'ai-insights', label: 'AI Insights & Assistant', icon: Sparkles, badge: 'Agent' },
-        { id: 'alerts-incidents', label: 'Alerts & Incidents', icon: AlertTriangle, badge: openIncidentsCount > 0 ? `${openIncidentsCount}` : undefined, badgeColor: 'text-amber-400 bg-amber-950/80 border border-amber-800/50' }
+        { id: 'business-benefits', label: 'Value Realization', icon: TrendingUp, badge: '$42.8M' },
+        { id: 'analytics-reports', label: 'Analytics & Reports', icon: BarChart3 },
+        { id: 'ai-insights', label: 'AI Insights & Assistant', icon: Sparkles, badge: 'Agent' },
+      ]
+    },
+    */
+    {
+      title: 'ALERTS',
+      items: [
+        { 
+          id: 'alerts-incidents', 
+          label: 'Alerts & Incidents', 
+          icon: AlertTriangle, 
+          badge: `${openIncidentsCount}`, 
+          badgeColor: 'text-amber-100 bg-[#c25e17] font-bold px-2 py-0.5 rounded' 
+        }
+      ]
+    },
+    /*
+    {
+      title: 'SYSTEM',
+      items: [
+        { id: 'administration', label: 'Administration & Config', icon: Settings }
       ]
     }
+    */
   ];
 
   return (
     <aside 
+      ref={ref}
+      id="app-sidebar"
       className={`relative z-30 flex flex-col border-r border-[#224375] bg-[#10203a] backdrop-blur-md transition-all duration-300 ${
         collapsed ? 'w-20' : 'w-72'
       }`}
     >
       {/* Brand Header */}
-      <div className={`flex h-18 items-center border-b border-[#224375] px-4 bg-[#132542] ${collapsed ? 'justify-center' : 'justify-start'}`}>
+      <div className={`flex h-18 items-center border-b border-[#224375] px-5 bg-[#132542] ${collapsed ? 'justify-center' : 'justify-start'}`}>
         {!collapsed ? (
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold tracking-wider text-white">
-                MOVE™
+              <span className="text-base font-bold tracking-tight text-white">
+                MOVE<span className="text-[10px] font-bold align-top">™</span>
               </span>
-              <span className="text-xs font-semibold text-sky-400/80">×</span>
-              <span className="text-xs font-bold tracking-widest text-slate-100">
+              <span className="text-xs font-semibold text-sky-400">×</span>
+              <span className="text-base font-bold text-white tracking-tight">
                 Automotive
               </span>
             </div>
-            <div className="text-[11px] font-medium tracking-tight text-sky-300/70">
+            <div className="text-[11px] font-medium tracking-tight text-sky-400/90 mt-0.5">
               Connected Vehicle Intelligence
             </div>
           </div>
         ) : (
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a3156] border border-[#224375] text-sky-400 font-bold text-xs shadow-inner" title="TATA MOVE™ × JLR">
-            Move
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a3156] border border-[#224375] text-sky-400 font-bold text-xs shadow-inner" title="MOVE™ × Automotive">
+            MV
           </div>
         )}
       </div>
@@ -131,14 +156,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
                   key={item.id}
                   onClick={() => setActiveModule(item.id)}
                   title={collapsed ? item.label : undefined}
-                  className={`group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${
+                  className={`group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-[#1a3156] text-sky-300 font-semibold shadow-inner border border-sky-500/30'
+                      ? 'bg-[#183158] text-white font-semibold border border-sky-500/50 shadow-md'
                       : 'text-slate-300 hover:bg-[#152744] hover:text-white border border-transparent'
                   } ${collapsed ? 'justify-center' : 'justify-start'}`}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-md bg-sky-400" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-md bg-sky-400" />
                   )}
                   <Icon 
                     size={17} 
@@ -151,7 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
                   )}
                   {!collapsed && item.badge && (
                     <span 
-                      className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                      className={`text-[10px] font-mono px-2 py-0.5 rounded ${
                         item.badgeColor || 'bg-[#152744] text-sky-300 border border-[#224375]'
                       }`}
                     >
@@ -182,11 +207,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
             </div>
           </div>
         ) : (
-          <div className="flex justify-center py-1" title="Tata Move™ RSP Cloud: 99.98% OK">
+          <div className="flex justify-center py-1" title="Move™ RSP Cloud: 99.98% OK">
             <Cpu size={16} className="text-sky-400" />
           </div>
         )}
       </div>
     </aside>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
